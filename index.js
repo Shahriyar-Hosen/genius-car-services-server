@@ -1,12 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+const verifyJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send({ massage: "unAuthorized access" });
+  }
+  console.log("inside verifyJWT: ", authHeader);
+  next();
+};
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.d76bb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -23,15 +32,14 @@ async function run() {
 
     // JWT Token
     // AUTH
-
     app.post("/login", async (req, res) => {
-
+      // Create Node Token - require('crypto').randomBytes(64).toString('hex')
       const user = req.body;
-      console.log(user)
+      console.log(user);
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1d",
       });
-      res.send({accessToken})
+      res.send({ accessToken });
     });
     // ----------------------------------------------------------
 
@@ -59,7 +67,7 @@ async function run() {
     //  Order Collection API
     // http://localhost:5000/order
 
-    app.get("/order", async (req, res) => {
+    app.get("/order", verifyJWT, async (req, res) => {
       const query = { email: req.query.email };
       const cursor = orderCollection.find(query);
       const order = await cursor.toArray();
