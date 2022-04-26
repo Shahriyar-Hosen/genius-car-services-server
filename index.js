@@ -13,7 +13,16 @@ const verifyJWT = (req, res, next) => {
   if (!authHeader) {
     return res.status(401).send({ massage: "unAuthorized access" });
   }
-  console.log("inside verifyJWT: ", authHeader);
+  // verify a token asymmetric
+  const token = authHeader.split(" ")[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
+    if (err) {
+      return res.status(403).send({ massage: "Forbidden access" });
+    }
+    console.log("decoded", decoded);
+    req.decoded = decoded;
+  });
+  // --------------------------------------------------------------
   next();
 };
 
@@ -68,10 +77,17 @@ async function run() {
     // http://localhost:5000/order
 
     app.get("/order", verifyJWT, async (req, res) => {
-      const query = { email: req.query.email };
-      const cursor = orderCollection.find(query);
-      const order = await cursor.toArray();
-      res.send(order);
+      // only verify user call this api (This api is only token verify user)
+      const decodedEmail = req.decoded.email;
+      const email = req.query.email;
+      if (decodedEmail === email) {
+        const query = { email: email };
+        const cursor = orderCollection.find(query);
+        const order = await cursor.toArray();
+        res.send(order);
+      } else {
+        return res.status(403).send({ massage: "Forbidden access" });
+      }
     });
 
     app.post("/order", async (req, res) => {
