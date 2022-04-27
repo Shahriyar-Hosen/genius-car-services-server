@@ -42,7 +42,9 @@ async function run() {
     // JWT Token
     // AUTH
     app.post("/login", async (req, res) => {
+
       // Create Node Token - require('crypto').randomBytes(64).toString('hex')
+
       const user = req.body;
       console.log(user);
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -89,6 +91,7 @@ async function run() {
         return res.status(403).send({ massage: "Forbidden access" });
       }
     });
+    // ------------------------------------------------------------
 
     app.post("/order", async (req, res) => {
       const order = req.body;
