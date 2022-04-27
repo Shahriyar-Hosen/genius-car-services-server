@@ -114,6 +114,9 @@ async function run() {
 app.get("/", (req, res) => {
   res.json("Running Genius car service");
 });
+app.get("/hero", (req, res) => {
+  res.json("Running hero");
+});
 
 app.listen(port, () => {
   console.log("Listening to port:", port);
