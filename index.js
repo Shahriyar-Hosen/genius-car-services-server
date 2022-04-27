@@ -78,7 +78,7 @@ async function run() {
     //  Order Collection API
     // http://localhost:5000/order
     app.get("/order", verifyJWT, async (req, res) => {
-      // only verify user call this api (This api is only token verify user)
+      // This api is only token verify user
       const decodedEmail = req.decoded.email;
       const email = req.query.email;
       if (decodedEmail === email) {
