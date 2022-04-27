@@ -53,6 +53,7 @@ async function run() {
     });
     // ----------------------------------------------------------
 
+    // service get
     app.get("/service", async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
