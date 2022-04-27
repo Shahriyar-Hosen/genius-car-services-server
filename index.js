@@ -21,9 +21,9 @@ const verifyJWT = (req, res, next) => {
     }
     console.log("decoded", decoded);
     req.decoded = decoded;
+    next();
   });
   // --------------------------------------------------------------
-  next();
 };
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
