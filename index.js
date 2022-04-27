@@ -23,7 +23,7 @@ const verifyJWT = (req, res, next) => {
     req.decoded = decoded;
     next();
   });
-  // --------------------------------------------------------------
+  // ----------------------------------------------------
 };
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -74,7 +74,6 @@ async function run() {
       res.send(result);
     });
     // ------------------------------------------------------
-    // ====================
 
     //  Order Collection API
     // http://localhost:5000/order
