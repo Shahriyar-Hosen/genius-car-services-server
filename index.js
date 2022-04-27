@@ -33,6 +33,7 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
+
 async function run() {
   try {
     await client.connect();
@@ -42,9 +43,7 @@ async function run() {
     // JWT Token
     // AUTH
     app.post("/login", async (req, res) => {
-
       // Create Node Token - require('crypto').randomBytes(64).toString('hex')
-
       const user = req.body;
       console.log(user);
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -74,10 +73,10 @@ async function run() {
       const result = await serviceCollection.insertOne(newService);
       res.send(result);
     });
+    // ------------------------------------------------------
 
     //  Order Collection API
     // http://localhost:5000/order
-
     app.get("/order", verifyJWT, async (req, res) => {
       // only verify user call this api (This api is only token verify user)
       const decodedEmail = req.decoded.email;
@@ -106,6 +105,7 @@ async function run() {
       const result = await serviceCollection.deleteOne(query);
       res.send(result);
     });
+    // -------------------------------------------------------------
   } finally {
   }
 }
